@@ -95,84 +95,91 @@ The analysis reveals:
 
 ## Visualizations
 
-The analysis generates comprehensive visualizations organized into several categories:
+The analysis generates comprehensive visualizations that reveal key insights about insurance charge patterns and model performance:
 
 ### Exploratory Data Analysis
-```r
-# Distribution of target variable
-p1 <- ggplot(insurance_data, aes(x = charges)) +
-  geom_histogram(bins = 30, fill = "skyblue", alpha = 0.7) +
-  labs(title = "Distribution of Insurance Charges")
 
-# Charges by smoking status  
-p2 <- ggplot(insurance_data, aes(x = smoker, y = charges, fill = smoker)) +
-  geom_boxplot(alpha = 0.7) +
-  labs(title = "Charges by Smoking Status")
+The initial data exploration reveals important patterns in the insurance dataset:
 
-# Age vs charges relationship
-p3 <- ggplot(insurance_data, aes(x = age, y = charges, color = smoker)) +
-  geom_point(alpha = 0.6) +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Age vs Charges by Smoking Status")
-```
+![Distribution of Insurance Charges](plots/01_charges_distribution.png)
+*The distribution of insurance charges shows a right-skewed pattern with most charges concentrated in the lower range and a long tail of high-cost cases.*
+
+![Charges by Smoking Status](plots/02_charges_by_smoking.png)
+*Smoking status dramatically affects insurance charges, with smokers showing significantly higher median costs and greater variability.*
+
+![Age vs Charges by Smoking Status](plots/03_age_vs_charges.png)
+*The relationship between age and charges differs substantially between smokers and non-smokers, with smokers showing steeper cost increases with age.*
 
 ### Bayesian Model Diagnostics
-```r
-# Posterior predictive checks
-pp_check(model1, nreps = 50) + 
-  labs(title = "Posterior Predictive Check")
 
-# MCMC trace plots for convergence assessment
-mcmc_trace(model1, pars = c("age", "sexmale", "bmi", "smokeryes"))
+The Bayesian analysis includes rigorous diagnostic procedures to ensure model reliability:
 
-# Posterior distribution areas
-mcmc_areas(model1, pars = c("age", "sexmale", "bmi", "smokeryes")) +
-  labs(title = "Posterior Distributions of Key Parameters")
+![Posterior Predictive Check](plots/04_posterior_predictive_check.png)
+*Posterior predictive checks validate that the model generates realistic data distributions matching the observed charges.*
+
+![MCMC Trace Plots](plots/05_mcmc_trace.png)
+*MCMC trace plots demonstrate proper chain convergence for all key parameters, ensuring reliable posterior estimates.*
+
+### Parameter Estimation and Uncertainty
+
+The Bayesian framework provides complete uncertainty quantification for all model parameters:
+
+![Posterior Distributions](plots/06_posterior_distributions.png)
+*Posterior distributions show the uncertainty in parameter estimates, with smoking having the largest and most certain effect.*
+
+![Coefficient Estimates](plots/07_coefficient_plot.png)
+*Coefficient plots with 95% credible intervals reveal which factors significantly influence insurance charges.*
+
+![Model 2 Interactions](plots/08_model2_interactions.png)
+*Model 2 incorporates interaction terms, showing how smoking modifies the effects of age and BMI on insurance costs.*
+
+### Model Validation and Diagnostics
+
+Comprehensive residual analysis ensures model assumptions are met:
+
+![Residual Analysis](plots/09_residual_analysis.png)
+*Residual diagnostics for Model 1 show patterns that suggest the need for transformation or more complex modeling.*
+
+![Model 3 Diagnostics](plots/10_model3_diagnostics.png)
+*Model 3 diagnostics demonstrate improved residual patterns after log transformation, with better normality and homoscedasticity.*
+
+**Key Visualization Insights:**
+- **Right-skewed charge distribution** motivates log transformation in Models 3-4
+- **Strong smoking effects** appear consistently across all model specifications
+- **MCMC convergence** confirms reliable Bayesian inference
+- **Residual improvements** validate the progression from simple to complex models
+- **Interaction effects** reveal nuanced relationships between risk factors
+
+## Project Structure
+
+```
+├── bayesian_insurance_analysis.R    # Main analysis script
+├── generate_plots.R                 # Script to generate visualizations
+├── insurance.csv                    # Dataset
+├── Practice.Rproj                   # R project file
+├── plots/                           # Generated visualization images
+│   ├── 01_charges_distribution.png
+│   ├── 02_charges_by_smoking.png
+│   ├── 03_age_vs_charges.png
+│   ├── 04_posterior_predictive_check.png
+│   ├── 05_mcmc_trace.png
+│   ├── 06_posterior_distributions.png
+│   ├── 07_coefficient_plot.png
+│   ├── 08_model2_interactions.png
+│   ├── 09_residual_analysis.png
+│   └── 10_model3_diagnostics.png
+└── README.md                        # This file
 ```
 
-### Parameter Estimation
-```r
-# Coefficient plots with credible intervals
-plot(model1, pars = c("age", "sexmale", "bmi", "children", "smokeryes")) +
-  labs(title = "Coefficient Estimates with Credible Intervals")
+## Generating Visualizations
 
-# Model 2 with interaction terms
-mcmc_areas(model2, pars = c("age", "sexmale", "bmi", "smokeryes", 
-                           "age:smokeryes", "bmi:smokeryes")) +
-  labs(title = "Model 2: Posterior Distributions with Interactions")
+To regenerate the visualization images:
+
+```r
+source("generate_plots.R")
 ```
 
-### Model Validation
-```r
-# Residual analysis
-plot(fitted_values, residuals, main = "Residuals vs Fitted Values")
-qqnorm(residuals, main = "Normal Q-Q Plot of Residuals")
-
-# Enhanced diagnostics for log-transformed models
-par(mfrow = c(2, 2))
-plot(fitted_values3, residuals3, main = "Model 3: Residuals vs Fitted (Log Scale)")
-qqnorm(residuals3, main = "Model 3: Normal Q-Q Plot")
-plot(fitted_original, residuals3, main = "Model 3: Residuals vs Fitted (Original Scale)")
-hist(residuals3, main = "Model 3: Residual Distribution", col = "lightblue")
-```
-
-### Advanced Model 4 Diagnostics
-```r
-# Comprehensive residual analysis
-plot(fitted_values4, residuals4, main = "Model 4: Residuals vs Fitted (Log Scale)")
-plot(fitted_values4, sqrt(abs(residuals4)), main = "Model 4: Scale-Location Plot")
-
-# Final posterior predictive check
-pp_check(model4, nreps = 50) + labs(title = "Model 4: Posterior Predictive Check")
-```
-
-**Visualization Highlights:**
-- **Exploratory plots** reveal right-skewed charge distribution and clear smoking effects
-- **Trace plots** confirm MCMC convergence across all parameters
-- **Posterior areas** show parameter uncertainty and effect magnitudes  
-- **Residual diagnostics** validate model assumptions and identify improvements
-- **Interaction visualizations** demonstrate complex relationships between predictors
-
+This will create all plots in the `plots/` directory with high-resolution PNG format suitable for documentation.
 
 ## Technical Notes
 
