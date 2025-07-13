@@ -173,14 +173,6 @@ pp_check(model4, nreps = 50) + labs(title = "Model 4: Posterior Predictive Check
 - **Residual diagnostics** validate model assumptions and identify improvements
 - **Interaction visualizations** demonstrate complex relationships between predictors
 
-## Project Structure
-
-```
-├── bayesian_insurance_analysis.R    # Main analysis script
-├── insurance.csv                    # Dataset
-├── Practice.Rproj                   # R project file
-└── README.md                        # This file
-```
 
 ## Technical Notes
 
