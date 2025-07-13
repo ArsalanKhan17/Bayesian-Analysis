@@ -1,0 +1,41 @@
+# R-specific files
+.RData
+.Rhistory
+.RProfile
+.Ruserdata
+
+# R session data
+*.rds
+*.rda
+
+# Temporary files
+*~
+*.tmp
+*.swp
+
+# MacOS
+.DS_Store
+
+# RStudio project files (keep .Rproj but ignore local settings)
+.Rproj.user/
+
+# Output files
+*.html
+*.pdf
+*_files/
+*_cache/
+
+# Large model objects (optional - uncomment if models get too large)
+# *.rds
+# models/
+
+# Plots and figures (optional)
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
+
+# Package development files
+src/*.o
+src/*.so
+src/*.dll
